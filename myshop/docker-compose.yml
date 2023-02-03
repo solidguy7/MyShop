@@ -20,3 +20,18 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+  rabbitmq:
+    image: rabbitmq:3.11.8-management-alpine
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=mypass
+  flower:
+    image: mher/flower
+    environment:
+      - CELERY_BROKER_URL=amqp://admin:mypass@rabbitmq:5672//
+      - FLOWER_PORT=5555
+    ports:
+      - 5555:5555
